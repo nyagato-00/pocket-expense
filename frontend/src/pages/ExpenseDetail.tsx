@@ -290,7 +290,7 @@ const ExpenseDetail: React.FC = () => {
                     </div>
                     {expense.receiptUrl && (
                       <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                        <dt className="text-sm font-medium text-gray-500">領収書</dt>
+                        <dt className="text-sm font-medium text-gray-500">領収書URL</dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                           <a
                             href={expense.receiptUrl}
@@ -299,6 +299,21 @@ const ExpenseDetail: React.FC = () => {
                             className="text-indigo-600 hover:text-indigo-900"
                           >
                             領収書を表示
+                          </a>
+                        </dd>
+                      </div>
+                    )}
+                    {expense.receiptFilePath && (
+                      <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                        <dt className="text-sm font-medium text-gray-500">領収書ファイル</dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          <a
+                            href={`http://localhost:4000/uploads/${expense.receiptFilePath.split('/').pop()}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
+                            {expense.receiptFileName || '領収書ファイルを表示'}
                           </a>
                         </dd>
                       </div>
