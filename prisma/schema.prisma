@@ -1,0 +1,49 @@
+// データソース
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// 経費申請モデル
+model ExpenseRequest {
+  id          String      @id @default(uuid())
+  title       String
+  amount      Float
+  description String?
+  status      RequestStatus @default(PENDING)
+  receiptUrl  String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  userId      String
+  user        User        @relation(fields: [userId], references: [id])
+}
+
+// ユーザーモデル
+model User {
+  id              String          @id @default(uuid())
+  name            String
+  email           String          @unique
+  role            UserRole        @default(USER)
+  department      String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  expenseRequests ExpenseRequest[]
+}
+
+// 経費申請ステータス
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// ユーザーロール
+enum UserRole {
+  USER
+  APPROVER
+  ADMIN
+}
