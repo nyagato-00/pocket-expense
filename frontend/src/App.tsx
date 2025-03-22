@@ -8,6 +8,7 @@ import Profile from './pages/Profile';
 import ExpenseList from './pages/ExpenseList';
 import ExpenseForm from './pages/ExpenseForm';
 import ExpenseDetail from './pages/ExpenseDetail';
+import UserManagement from './pages/UserManagement';
 
 // 保護されたルートコンポーネント
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -90,6 +91,11 @@ function AppContent() {
         <Route path="/expenses/:id/edit" element={
           <ProtectedRoute>
             <ExpenseForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/admin/users" element={
+          <ProtectedRoute>
+            <UserManagement />
           </ProtectedRoute>
         } />
 

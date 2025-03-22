@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
-import { FiPlus, FiList } from 'react-icons/fi';
 import Button from '../components/Button';
 import Card from '../components/Card';
 import Layout from '../components/Layout';
@@ -11,6 +10,7 @@ const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const isApprover = user?.role === 'APPROVER' || user?.role === 'ADMIN';
+  const isAdmin = user?.role === 'ADMIN';
 
   // 最近の経費申請を取得（最大5件）
   const myExpensesQuery = trpc.expense.getMyExpenses.useQuery({
@@ -78,22 +78,27 @@ const Dashboard: React.FC = () => {
                     <p className="text-secondary-500 mb-6">
                       経費申請の管理を簡単に行うことができます。
                     </p>
-                    <div className="flex justify-center">
+                    <div className="flex flex-wrap justify-center gap-4">
                       <Button
                         label="新規経費申請"
                         variant="primary"
                         size="lg"
-                        leftIcon={FiPlus}
                         onClick={handleCreateExpense}
-                        className="mr-4"
                       />
                       <Button
                         label="すべての経費を表示"
                         variant="secondary"
                         size="lg"
-                        leftIcon={FiList}
                         onClick={handleViewAllExpenses}
                       />
+                      {isAdmin && (
+                        <Button
+                          label="ユーザー管理"
+                          variant="accent"
+                          size="lg"
+                          onClick={() => navigate('/admin/users')}
+                        />
+                      )}
                     </div>
                   </div>
                 </Card>

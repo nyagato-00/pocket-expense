@@ -51,6 +51,14 @@ export const Layout: React.FC<LayoutProps> = ({ children, title }) => {
                   leftIcon={FiHome}
                   onClick={() => navigate('/dashboard')}
                 />
+                {user.role === 'ADMIN' && (
+                  <Button
+                    label="ユーザー管理"
+                    variant="accent"
+                    size="sm"
+                    onClick={() => navigate('/admin/users')}
+                  />
+                )}
                 <Button
                   label="プロフィール"
                   variant="accent"
