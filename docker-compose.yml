@@ -7,6 +7,7 @@ services:
       - ./backend:/app
       - ./prisma:/app/prisma  # prismaディレクトリをマウント
       - /app/node_modules
+      - uploads_data:/app/uploads  # アップロードディレクトリをマウント
     ports:
       - "4000:4000"
     environment:
@@ -14,7 +15,12 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/pocket_expense
     depends_on:
       - db
-    command: sh -c "npm install && npx prisma generate && npx ts-node /app/prisma/seed.ts && npm run dev"
+    command: sh -c "npm install && npx prisma migrate deploy && npx prisma generate && npx ts-node /app/prisma/seed.ts && npm run dev"
+    # メモリ制限を設定
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   # フロントエンドサービス
   frontend:
@@ -31,6 +37,11 @@ services:
     depends_on:
       - backend
     command: sh -c "npm install && npm run dev"
+    # メモリ制限を設定
+    deploy:
+      resources:
+        limits:
+          memory: 1G
 
   # データベース
   db:
@@ -40,10 +51,24 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=pocket_expense
+      # PostgreSQLの接続設定
+      - POSTGRES_MAX_CONNECTIONS=100
+      - POSTGRES_SHARED_BUFFERS=128MB
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # ヘルスチェック設定
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    # メモリ制限を設定
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
   # Storybook
   storybook:
@@ -56,6 +81,12 @@ services:
     ports:
       - "6006:6006"
     command: sh -c "npm install && npm run storybook"
+    # メモリ制限を設定
+    deploy:
+      resources:
+        limits:
+          memory: 512M
 
 volumes:
   postgres_data:
+  uploads_data:  # アップロードファイル用のボリューム

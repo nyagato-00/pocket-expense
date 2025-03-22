@@ -76,17 +76,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // トークンが変更されたときにユーザー情報を取得
   useEffect(() => {
     if (token) {
-      meQuery.refetch().then(response => {
-        if (response.data) {
-          setUser(response.data as User);
-        }
-        setIsLoading(false);
-      }).catch(() => {
-        // エラーが発生した場合はリフレッシュトークンを試す
-        handleRefreshToken();
-      });
+      // refetchを使わず、enabledフラグで制御する
+      setIsLoading(false);
     }
-  }, [token, meQuery]);
+  }, [token]);
+
+  // meQueryの結果が変更されたときにユーザー情報を更新
+  useEffect(() => {
+    if (meQuery.data) {
+      setUser(meQuery.data as User);
+    } else if (meQuery.isError && refreshToken) {
+      // エラーが発生した場合はリフレッシュトークンを試す
+      handleRefreshToken();
+    }
+  }, [meQuery.data, meQuery.isError, refreshToken]);
 
   // リフレッシュトークンを使用して新しいトークンを取得
   const handleRefreshToken = async () => {

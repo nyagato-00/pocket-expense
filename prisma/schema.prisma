@@ -10,19 +10,21 @@ datasource db {
 
 // 経費申請モデル
 model ExpenseRequest {
-  id          String        @id @default(uuid())
-  title       String
-  amount      Float
-  description String?
-  category    String?
-  status      RequestStatus @default(PENDING)
-  receiptUrl  String?
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  userId      String
-  user        User          @relation(fields: [userId], references: [id])
-  approvals   Approval[]
-  comments    Comment[]
+  id              String        @id @default(uuid())
+  title           String
+  amount          Float
+  description     String?
+  category        String?
+  status          RequestStatus @default(PENDING)
+  receiptUrl      String?
+  receiptFilePath String?
+  receiptFileName String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  userId          String
+  user            User          @relation(fields: [userId], references: [id])
+  approvals       Approval[]
+  comments        Comment[]
 }
 
 // 承認モデル

@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { trpc } from '../utils/trpc';
 import { useAuth } from '../contexts/AuthContext';
 import { ExpenseCategory } from '../../../shared/types';
+import FileUpload from '../components/FileUpload';
 
 const ExpenseForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,7 +17,9 @@ const ExpenseForm: React.FC = () => {
     amount: '',
     description: '',
     category: '',
-    receiptUrl: ''
+    receiptUrl: '',
+    receiptFilePath: '',
+    receiptFileName: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -39,7 +42,9 @@ const ExpenseForm: React.FC = () => {
         amount: expense.amount.toString(),
         description: expense.description || '',
         category: expense.category || '',
-        receiptUrl: expense.receiptUrl || ''
+        receiptUrl: expense.receiptUrl || '',
+        receiptFilePath: expense.receiptFilePath || '',
+        receiptFileName: expense.receiptFileName || ''
       });
     }
   }, [isEditing, expenseQuery.data]);
@@ -93,7 +98,9 @@ const ExpenseForm: React.FC = () => {
         amount: Number(formData.amount),
         description: formData.description || undefined,
         category: formData.category as ExpenseCategory | undefined,
-        receiptUrl: formData.receiptUrl || undefined
+        receiptUrl: formData.receiptUrl || undefined,
+        receiptFilePath: formData.receiptFilePath || undefined,
+        receiptFileName: formData.receiptFileName || undefined
       };
       
       if (isEditing) {
@@ -103,7 +110,9 @@ const ExpenseForm: React.FC = () => {
           amount: expenseData.amount,
           description: expenseData.description,
           category: expenseData.category,
-          receiptUrl: expenseData.receiptUrl
+          receiptUrl: expenseData.receiptUrl,
+          receiptFilePath: expenseData.receiptFilePath,
+          receiptFileName: expenseData.receiptFileName
         });
       } else {
         await createExpenseMutation.mutateAsync(expenseData);
@@ -296,6 +305,24 @@ const ExpenseForm: React.FC = () => {
                         onChange={handleChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                         placeholder="https://example.com/receipt.pdf"
+                      />
+                    </div>
+
+                    {/* 領収書ファイルアップロード */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">
+                        領収書ファイル
+                      </label>
+                      <FileUpload
+                        onFileUpload={(fileInfo) => {
+                          setFormData(prev => ({
+                            ...prev,
+                            receiptFilePath: fileInfo.filePath,
+                            receiptFileName: fileInfo.fileName
+                          }));
+                        }}
+                        currentFileUrl={formData.receiptFilePath ? `http://localhost:4000/uploads/${formData.receiptFilePath.split('/').pop()}` : undefined}
+                        currentFileName={formData.receiptFileName}
                       />
                     </div>
 

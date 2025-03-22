@@ -4,6 +4,14 @@ export interface ExpenseRequestInput {
   description?: string;
   category?: string;
   receiptUrl?: string;
+  receiptFilePath?: string;
+  receiptFileName?: string;
+}
+
+export interface FileUploadResponse {
+  filePath: string;
+  fileName: string;
+  fileUrl: string;
 }
 
 export interface ApprovalInput {

@@ -270,7 +270,9 @@ export const expenseRouter = router({
         amount: z.number().min(1, '金額は1以上である必要があります'),
         description: z.string().optional(),
         category: categoryEnum.optional(),
-        receiptUrl: z.string().optional()
+        receiptUrl: z.string().optional(),
+        receiptFilePath: z.string().optional(),
+        receiptFileName: z.string().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -282,6 +284,8 @@ export const expenseRouter = router({
           description: input.description,
           category: input.category,
           receiptUrl: input.receiptUrl,
+          receiptFilePath: input.receiptFilePath,
+          receiptFileName: input.receiptFileName,
           userId: ctx.user.id
         }
       });
@@ -298,7 +302,9 @@ export const expenseRouter = router({
         amount: z.number().min(1, '金額は1以上である必要があります').optional(),
         description: z.string().optional(),
         category: categoryEnum.optional(),
-        receiptUrl: z.string().optional()
+        receiptUrl: z.string().optional(),
+        receiptFilePath: z.string().optional(),
+        receiptFileName: z.string().optional()
       })
     )
     .mutation(async ({ ctx, input }) => {
@@ -336,6 +342,8 @@ export const expenseRouter = router({
       if (input.description !== undefined) updateData.description = input.description;
       if (input.category !== undefined) updateData.category = input.category;
       if (input.receiptUrl !== undefined) updateData.receiptUrl = input.receiptUrl;
+      if (input.receiptFilePath !== undefined) updateData.receiptFilePath = input.receiptFilePath;
+      if (input.receiptFileName !== undefined) updateData.receiptFileName = input.receiptFileName;
       
       // 経費申請を更新
       return await ctx.prisma.expenseRequest.update({
