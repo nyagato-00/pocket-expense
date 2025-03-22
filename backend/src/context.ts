@@ -9,7 +9,8 @@ export const createContext = ({ req, res }: CreateExpressContextOptions) => {
     prisma,
     req,
     res,
+    user: undefined as { id: string; role: string } | undefined,
   };
 };
 
-export type Context = inferAsyncReturnType;
+export type Context = inferAsyncReturnType<typeof createContext>;

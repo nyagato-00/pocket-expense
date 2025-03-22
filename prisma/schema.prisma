@@ -27,6 +27,9 @@ model User {
   id              String          @id @default(uuid())
   name            String
   email           String          @unique
+  passwordHash    String
+  salt            String
+  refreshToken    String?
   role            UserRole        @default(USER)
   department      String?
   createdAt       DateTime        @default(now())
