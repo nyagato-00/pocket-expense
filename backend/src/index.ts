@@ -4,8 +4,11 @@ import { createExpressMiddleware } from '@trpc/server/adapters/express';
 import { appRouter } from './routers';
 import { createContext } from './context';
 
+// 環境変数
+const isDevelopment = process.env.NODE_ENV === 'development';
+const port = process.env.PORT || 4000;
+
 const app = express();
-const port = 4000;
 
 // ミドルウェア
 app.use(cors());

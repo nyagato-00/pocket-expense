@@ -5,6 +5,7 @@ RUN apk add --no-cache openssl
 WORKDIR /app
 
 COPY package*.json ./
+# 開発依存関係も含めてすべての依存関係をインストール
 RUN npm install
 
 COPY . .
