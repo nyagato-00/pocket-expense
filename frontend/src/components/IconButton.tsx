@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { IconType } from 'react-icons';
 
-export interface ButtonProps {
-  /** ボタンのラベル */
-  label: string;
+export interface IconButtonProps {
+  /** アイコン */
+  icon: IconType;
   /** クリック時の処理 */
   onClick?: () => void;
   /** ボタンの種類 */
@@ -12,35 +12,26 @@ export interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
   /** 無効化状態 */
   disabled?: boolean;
-  /** 左側のアイコン */
-  leftIcon?: IconType;
-  /** 右側のアイコン */
-  rightIcon?: IconType;
-  /** 幅いっぱいに広げる */
-  fullWidth?: boolean;
+  /** ツールチップテキスト */
+  tooltip?: string;
   /** 追加のクラス名 */
   className?: string;
-  /** ボタンのタイプ */
-  type?: 'button' | 'submit' | 'reset';
-  /** 子要素 */
-  children?: ReactNode;
+  /** アクセシビリティのためのラベル */
+  ariaLabel: string;
 }
 
 /**
- * 基本的なボタンコンポーネント
+ * アイコンのみのボタンコンポーネント
  */
-export const Button: React.FC<ButtonProps> = ({
-  label,
+export const IconButton: React.FC<IconButtonProps> = ({
+  icon: Icon,
   onClick,
   variant = 'primary',
   size = 'md',
   disabled = false,
-  leftIcon: LeftIcon,
-  rightIcon: RightIcon,
-  fullWidth = false,
+  tooltip,
   className = '',
-  type = 'button',
-  children
+  ariaLabel
 }) => {
   // スタイルの設定
   const getVariantStyle = () => {
@@ -65,32 +56,31 @@ export const Button: React.FC<ButtonProps> = ({
   const getSizeStyle = () => {
     switch (size) {
       case 'sm':
-        return 'px-3 py-1.5 text-sm';
+        return 'p-1.5 text-sm';
       case 'md':
-        return 'px-4 py-2 text-base';
+        return 'p-2 text-base';
       case 'lg':
-        return 'px-6 py-3 text-lg';
+        return 'p-3 text-lg';
       default:
-        return 'px-4 py-2 text-base';
+        return 'p-2 text-base';
     }
   };
 
-  const baseStyle = 'rounded-md font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ease-in-out shadow-sm';
-  const widthStyle = fullWidth ? 'w-full' : '';
+  const baseStyle = 'rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200 ease-in-out shadow-sm flex items-center justify-center';
   
   return (
     <button
-      type={type}
-      className={`${baseStyle} ${getVariantStyle()} ${getSizeStyle()} ${widthStyle} ${className} flex items-center justify-center`}
+      type="button"
+      className={`${baseStyle} ${getVariantStyle()} ${getSizeStyle()} ${className}`}
       onClick={onClick}
       disabled={disabled}
       style={{ opacity: disabled ? 0.5 : 1 }}
+      title={tooltip}
+      aria-label={ariaLabel}
     >
-      {LeftIcon && <LeftIcon className={`mr-2 ${size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-xl' : 'text-base'}`} />}
-      {children || label}
-      {RightIcon && <RightIcon className={`ml-2 ${size === 'sm' ? 'text-sm' : size === 'lg' ? 'text-xl' : 'text-base'}`} />}
+      <Icon />
     </button>
   );
 };
 
-export default Button;
+export default IconButton;
