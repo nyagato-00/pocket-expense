@@ -57,7 +57,7 @@ docker-compose up
 
 ### データベースのセットアップ
 
-初回起動時、Prismaマイグレーションが自動的に実行され、データベーススキーマが作成されます。
+初回起動時、Prismaマイグレーションが自動的に実行され、データベーススキーマが作成されます。開発環境では、シードデータも自動的に投入されます。
 
 手動でマイグレーションを実行する場合は、以下のコマンドを使用します：
 
@@ -65,6 +65,29 @@ docker-compose up
 # バックエンドコンテナ内で実行
 docker-compose exec backend npx prisma migrate dev
 ```
+
+手動でシードデータを投入する場合は、以下のコマンドを使用します：
+
+```bash
+# 開発環境用シードデータを投入
+docker-compose exec backend npm run prisma:seed:dev
+
+# 本番環境用シードデータを投入
+docker-compose exec backend npm run prisma:seed
+```
+
+#### シードデータ
+
+開発環境では、以下のテストユーザーが自動的に作成されます：
+
+| メールアドレス | パスワード | ロール | 部署 |
+|--------------|----------|------|------|
+| admin@example.com | admin123 | 管理者 | 経営企画部 |
+| approver@example.com | approver123 | 承認者 | 経理部 |
+| user1@example.com | user123 | 一般ユーザー | 営業部 |
+| user2@example.com | user123 | 一般ユーザー | 開発部 |
+
+また、サンプルの経費申請、承認記録、コメントも作成されます。
 
 ## 利用可能なコマンド
 

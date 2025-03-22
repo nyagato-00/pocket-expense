@@ -5,6 +5,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
+import ExpenseList from './pages/ExpenseList';
+import ExpenseForm from './pages/ExpenseForm';
+import ExpenseDetail from './pages/ExpenseDetail';
 
 // 保護されたルートコンポーネント
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -67,6 +70,26 @@ function AppContent() {
         <Route path="/profile" element={
           <ProtectedRoute>
             <Profile />
+          </ProtectedRoute>
+        } />
+        <Route path="/expenses" element={
+          <ProtectedRoute>
+            <ExpenseList />
+          </ProtectedRoute>
+        } />
+        <Route path="/expenses/new" element={
+          <ProtectedRoute>
+            <ExpenseForm />
+          </ProtectedRoute>
+        } />
+        <Route path="/expenses/:id" element={
+          <ProtectedRoute>
+            <ExpenseDetail />
+          </ProtectedRoute>
+        } />
+        <Route path="/expenses/:id/edit" element={
+          <ProtectedRoute>
+            <ExpenseForm />
           </ProtectedRoute>
         } />
 

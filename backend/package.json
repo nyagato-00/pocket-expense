@@ -7,7 +7,9 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "jest",
-    "lint": "eslint . --ext .ts"
+    "lint": "eslint . --ext .ts",
+    "prisma:seed": "ts-node ../prisma/seed.ts",
+    "prisma:seed:dev": "NODE_ENV=development ts-node ../prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.12.0",

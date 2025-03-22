@@ -10,16 +10,44 @@ datasource db {
 
 // 経費申請モデル
 model ExpenseRequest {
-  id          String      @id @default(uuid())
+  id          String        @id @default(uuid())
   title       String
   amount      Float
   description String?
+  category    String?
   status      RequestStatus @default(PENDING)
   receiptUrl  String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   userId      String
-  user        User        @relation(fields: [userId], references: [id])
+  user        User          @relation(fields: [userId], references: [id])
+  approvals   Approval[]
+  comments    Comment[]
+}
+
+// 承認モデル
+model Approval {
+  id            String      @id @default(uuid())
+  status        RequestStatus
+  comment       String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  expenseId     String
+  expense       ExpenseRequest @relation(fields: [expenseId], references: [id])
+  approverId    String
+  approver      User        @relation("approvals", fields: [approverId], references: [id])
+}
+
+// コメントモデル
+model Comment {
+  id            String      @id @default(uuid())
+  content       String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  expenseId     String
+  expense       ExpenseRequest @relation(fields: [expenseId], references: [id])
+  userId        String
+  user          User        @relation("comments", fields: [userId], references: [id])
 }
 
 // ユーザーモデル
@@ -35,6 +63,8 @@ model User {
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
   expenseRequests ExpenseRequest[]
+  approvals       Approval[]      @relation("approvals")
+  comments        Comment[]       @relation("comments")
 }
 
 // 経費申請ステータス
